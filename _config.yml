@@ -14,10 +14,10 @@ owner:
   avatar:         your-photo.jpg
   email:          fabien@meurillon.org
   # Social networking links used in footer. Update and remove as you like.
-  twitter:        https://twitter.com/FabienM
-  facebook:       https://www.facebook.com/fabien.meurillon
-  github:         https://github.com/FabienM
-  linkedin:       http://fr.linkedin.com/in/fabienmeurillon/
+  twitter:        FabienM
+  facebook:       fabien.meurillon
+  github:         FabienM
+  linkedin:       fabienmeurillon/
   instagram:
   tumblr:
   # For Google Authorship https://plus.google.com/authorship
