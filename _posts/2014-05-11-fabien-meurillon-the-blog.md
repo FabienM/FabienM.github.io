@@ -1,5 +1,5 @@
 ---
-layout: posts
+layout: post
 title: "Fabien Meurillon the blog, next try"
 date: "2014-05-11 21:20:00 +0200"
 author: FabienM

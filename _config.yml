@@ -1,1 +1,46 @@
-markdown: kramdown
+title:            Fabien Meurillon's blog
+description:      
+logo:             site-logo.png
+disqus_shortname: shortname
+search:           true
+# Your site's domain goes here. When working locally use localhost server leave blank
+# PS. If you set this wrong stylesheets and scripts won't load and most links will break.
+# PPS. If you leave it blank for local testing home links won't work, they'll be fine for live domains though.
+url:              http://fabien.meurillon.org
+
+# Owner/author information
+owner:
+  name:           Fabien Meurillon
+  avatar:         your-photo.jpg
+  email:          fabien@meurillon.org
+  # Social networking links used in footer. Update and remove as you like.
+  twitter:        https://twitter.com/FabienM
+  facebook:       https://www.facebook.com/fabien.meurillon
+  github:         https://github.com/FabienM
+  linkedin:       http://fr.linkedin.com/in/fabienmeurillon/
+  instagram:
+  tumblr:
+  # For Google Authorship https://plus.google.com/authorship
+  google_plus:    "https://plus.google.com/+FabienMeurillon"
+
+# Analytics and webmaster tools stuff goes here
+google_analytics:
+google_verify:
+# https://ssl.bing.com/webmaster/configure/verify/ownership Option 2 content= goes here
+bing_verify:
+
+# Links to include in top navigation
+# For external links add external: true
+links:
+  - title: About
+    url: /about/
+  - title: Articles
+    url: /articles/
+
+# http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+timezone:    Europe/France
+pygments:    true
+markdown:    kramdown
+
+# https://github.com/mojombo/jekyll/wiki/Permalinks
+permalink:   /:categories/:title/
