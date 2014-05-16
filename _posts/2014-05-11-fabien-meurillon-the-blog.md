@@ -5,6 +5,10 @@ date: "2014-05-11 21:20:00 +0200"
 author: FabienM
 version: 1.0.0
 categories: [announcement]
+image:
+  feature: 2014-05-11-fabien-meurillon-the-blog.jpg
+  credit: AngeLilly Photographies
+  creditlink: http://www.angelilly-photographies.fr
 ---
 Hey!
 
