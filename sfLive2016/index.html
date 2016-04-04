@@ -23,8 +23,6 @@ class: center, middle, inverse
 
 ???
 
-TODO : Brand the slide
-
 # Agenda
 
 1. Contexte
@@ -48,7 +46,7 @@ name: about-me
 
 # Fabien Meurillon
 .left-column[
-![avatar](http://www.gravatar.com/avatar/625ee5a055aa83bb0bc5bbab24ebae8e?s=128)
+![avatar](images/avatar.png)
 [@FabienM](http://twitter.com/FabienM)
 
 
@@ -97,7 +95,7 @@ AECF : Auchan.fr, Auchan Traiteur, auchandirect, etc...
 ## Forum PHP 2015
 
 .left-column[
-![Alexandre Salomé au Forum PHP](https://img.youtube.com/vi/AMf96imU8w8/1.jpg)
+![Alexandre Salomé au Forum PHP](images/asal.jpg)
 ]
 .right-column[
 « *Retour d’expérience sur la migration du Back-Office* », Alexandre Salomé
@@ -168,6 +166,8 @@ sont indépendants et **petits**.
 
 # Ordre de grandeur
 
+.todo[sous-systeme indépendant (applis, données)]
+
 ## 1 micro-service =
 
 --
@@ -178,9 +178,15 @@ sont indépendants et **petits**.
 
 * 1 domaine métier (*Domain Driven Design*)
 
+???
+
+Rediriger vers les conf au sujet de DDD
+
 --
 
 * probablement moins de 5 aggrégats exposés sur l'API
+
+
 
 ???
 
@@ -327,7 +333,7 @@ class: todo, middle, center
 
 --
 
-### .glyphicon.glyphicon-ok[] Message driven
+### .fa.fa-check-square-o[] Message driven
 
 ???
 
@@ -337,7 +343,7 @@ class: todo, middle, center
 
 --
 
-### .glyphicon.glyphicon-remove[] Elastic
+### .fa.fa-times[] Elastic
 
 ???
 
@@ -347,7 +353,7 @@ class: todo, middle, center
 
 --
 
-### .glyphicon.glyphicon-remove[] Resilient
+### .fa.fa-times[] Resilient
 
 ???
 
@@ -358,7 +364,7 @@ class: todo, middle, center
 
 --
 
-### .glyphicon.glyphicon-remove[] Responsive
+### .fa.fa-times[] Responsive
 
 ???
 
@@ -368,7 +374,7 @@ class: todo, middle, center
 
 --
 
-### .glyphicon.glyphicon-remove[] Testable
+### .fa.fa-times[] Testable
 
 ???
 
@@ -378,7 +384,7 @@ class: todo, middle, center
 
 --
 
-### .glyphicon.glyphicon-remove[] Réutilisable
+### .fa.fa-times[] Réutilisable
 
 ???
 
@@ -390,7 +396,7 @@ class: todo, middle, center
 
 class: middle, center, inverse
 
-# Quand on tient un marteau, tous les problèmes ressemblent à des clous
+## Quand on tient un marteau, tous les problèmes ressemblent à des clous
 
 --
 
@@ -398,7 +404,7 @@ class: middle, center, inverse
 
 --
 
-# Quand on est développeur Symfony, toutes les solutions ressemblent à des bundles
+## Quand on est développeur Symfony, toutes les solutions ressemblent à des bundles
 
 ---
 
@@ -413,36 +419,41 @@ réseau. La plupart de ces composants seront des applications Symfony, mais
 
 ## Les échanges ne sont pas de la responsabilité des applications
 
-Nul besoin de trouver une solution tout de suite, reportons le problème.
+Nul besoin de trouver une solution tout de suite, reportons les problèmes.
+
+* Quel format d'échange ?
+* Quel protocole de transport ?
 
 ???
 
 Intégrer un bundle dans une application étend ses responsabilités, même si le
 code est maintenu ailleurs.
 
-Reporter un problème dans l'informatique : appliquer des standards
-
-On cherche un protocole standard
-
-* parallélisable
-* stateless
-* supportant l'asynchrone
-* gérant les erreurs
-* bien supporté dans symfony
+Reporter un problème dans l'informatique : appliquer des standards, appliquer
+des design patterns.
 
 ---
 
 class: inverse, middle, center
 
-# HTTP
+# Format d'échange : Design Pattern
+
+--
+
+## Le *Canonical Data Model*
 
 ---
 
-# Format d'échange
+# Format d'échange : Canonical Data Model
 
 ### L'application propriétaire d'une donnée est responsable de son format d'échange
 
 Il s'agit du *modèle de données canonique* (CDC).
+
+--
+
+C'est une représentation portable et standardisée d'un objet métier, idéalement
+soumise à un *contrat* (XSD, JSON Schema).
 
 --
 
@@ -473,7 +484,27 @@ Tout à fait possible avec Symfony Serializer
 
 ---
 
-# HTTP, seul protocole d'échange
+class: inverse, middle, center
+
+# Un standard pour le transport
+
+???
+
+On cherche un protocole standard
+
+* parallélisable
+* stateless
+* supportant l'asynchrone
+* gérant les erreurs
+* bien supporté dans symfony
+
+--
+
+## HTTP
+
+---
+
+# HTTP : protocole de transport
 
 Chaque application est responsable de ses données, celles-ci ne *devraient pas*
 être dupliquées d'une application à l'autre.
@@ -490,13 +521,13 @@ Chaque application est responsable de ses données, celles-ci ne *devraient pas*
 ### Client React
 .mermaid[sequenceDiagram
 App React->>Réf. Produit: POST /products
-Réf. Produit->>Stock: DELETE /products/1
+App React->>Réf. Produit: DELETE /products/1
 ]
 ]
 
 ---
 
-# HTTP, seul protocole d'échange
+# HTTP : protocole de transport
 
 Il est possible qu'une application souhaite déclencher des actions lors d'un
 événement survenu dans un autre composant.
@@ -558,10 +589,12 @@ src
 └── ApiBundle
     ├── Controller
     │   └── ProductController.php
-    ├── Model
-    │   └── Product.php
     ├── Client
     │   └── ProductService.php
+    ├── Event
+    │   └── ProductEvent.php
+    ├── Model
+    │   └── Product.php
     └── composer.json
 ```
 ]
@@ -587,6 +620,8 @@ src
     │   └── ProductController.php
     ├── Client
     │   └── ProductService.php
+    ├── Event
+    │   └── ProductEvent.php
     ├── Model
     │   └── Product.php
     └── composer.json
@@ -606,6 +641,8 @@ src
     │   └── ProductController.php
 *   ├── Client
 *   │   └── ProductService.php
+    ├── Event
+    │   └── ProductEvent.php
     ├── Model
     │   └── Product.php
     └── composer.json
@@ -630,6 +667,8 @@ src
 *   │   └── ProductController.php
     ├── Client
     │   └── ProductService.php
+    ├── Event
+    │   └── ProductEvent.php
     ├── Model
     │   └── Product.php
     └── composer.json
@@ -639,8 +678,6 @@ src
 .pull-right[
 Les routes et contrôleurs qui permettent à l'application maître de pousser les
 modifications.
-
-.todo[exemple routing]
 ]
 ---
 
@@ -655,6 +692,43 @@ src
     │   └── ProductController.php
     ├── Client
     │   └── ProductService.php
+*   ├── Event
+*   │   └── ProductEvent.php
+    ├── Model
+    │   └── Product.php
+    └── composer.json
+```
+]
+
+.pull-right[
+L'évènement qui sera propagé dans l'application symfony lorsqu'un appel sera
+reçut sur l'API.
+
+```php
+class ProductEvent {
+  /** @var string */
+  private $httpMethod;
+  /** @var \RefProduit\ApiBundle\Model\Product */
+  private $product;
+}
+```
+]
+
+---
+
+.pull-left[
+```bash
+src
+├── AppBundle
+│   └── Service
+│       └── ProductService.php
+└── ApiBundle
+    ├── Controller
+    │   └── ProductController.php
+    ├── Client
+    │   └── ProductService.php
+    ├── Event
+    │   └── ProductEvent.php
 *   ├── Model
 *   │   └── Product.php
     └── composer.json
@@ -678,6 +752,8 @@ src
     │   └── ProductController.php
     ├── Client
     │   └── ProductService.php
+    ├── Event
+    │   └── ProductEvent.php
     ├── Model
     │   └── Product.php
 *   └── composer.json
@@ -697,33 +773,311 @@ L'API Bundle profite directement du *semver* de son application parente.
 ---
 
 layout: false
+
+# L'*ApiBundle* est un ambassadeur
+
+Il **peut contenir** :
+
+* des fonctionnalités techniques supplémentaires
+ * gestion de cache
+ * *Service Location*
+
+???
+
+Citer exemple gestion de cache ATP, contraintes de SLA
+
+Service location à éviter, réintroduit un couplage à l'infrastructure
+
+--
+
+Il **ne contient jamais** :
+
+* la logique métier de son application maître
+* la logique métier de son application utilisatrice
+* les informations de persistance (mappings Doctrine)
+
+---
+
+layout:true
+
+# Utiliser un API Bundle
+
+---
+
+#### `composer.json`
+
+```json
+{
+  "require": {
+    "arf/ref-produit-api-bundle": "1.0.0",
+    "arf/stock-api-bundle": "1.1.2"
+  }
+}
+```
+
+#### `routing.yml`
+
+```yml
+ref_produit:
+    resource: "@RefProduitBundle/Resources/config/routing.yml"
+    prefix: /api
+stock:
+    resource: "@StockBundle/Resources/config/routing.yml"
+    prefix: /api
+```
+
+---
+
+#### `services.yml`
+
+```yml
+product_listener:
+*   class: Arf\StockBundle\EventListener\ProductListener
+    tags:
+        - { name: kernel.event_listener, event: arf_product }
+```
+
+Le code métier va ici !
+
+???
+
+Façon de parler, un Listener est un point d'entrée, pas réutilisable
+
+---
+
+## Appel du client Guzzle
+
+```php
+class MaClasseMetier {
+  public __construct(\Arf\RefProduitApiBundle\Service\ProductService $productService) {
+    $this->productService = $productService;
+  }
+
+  public function maMethodeMetier() {
+    $this->productService->list();
+    $this->productService->findOne(1);
+    $this->productService->create(new \Arf\RefProduitApiBundle\Model\Product());
+  }
+}
+```
+
+---
+
+layout:false
+
+# Point reactive
+
+--
+
+### .fa.fa-check-square-o[] Elastic
+
+???
+
+### Elastic
+
+* API Rest (Stateless), donc scalable
+* Multi-threadé nativement par le serveur web
+
+--
+
+### .fa.fa-check-square-o[] Resilient
+
+???
+
+### Resilient
+
+*
+
+--
+
+### .fa.fa-check-square-o[] Responsive
+
+???
+
+### Responsive
+
+* Appels unitaires à l'API Rest, qu'il est possible de monitorer
+* HTTP permet une gestion du cache qui stabilise les perfs
+
+--
+
+### .fa.fa-check-square-o[] Testable
+
+???
+
+### Testable
+
+* NelmioApiBundle
+* Postman
+* Browser
+
+--
+
+### .fa.fa-check-square-o[] Réutilisable
+
+???
+
+### Réutilisable
+
+* Entre applis Symfony
+* Pour d'autres technologies
+
+--
+
+### .fa.fa-times[] Message driven
+
+???
+
+### Orienté message
+
+* ça ne suffit pas
+* comment notifier plusieurs applications sans multiplier les appels HTTP ?
+
+???
+
+Et c'est là qu'on en arrive au...
+
+---
+
+class: inverse, middle, center
+
+# Enterprise Service Bus
+
+---
+
+layout:true
+
+# Pourquoi un ESB ?
+
+---
+---
+
+Parceque on veut intégrer ensemble les microservices en réflétant fidèlement
+**les process métiers**.
+
+--
+
+Parceque on ne veut plus coupler les applications entre elles, **ni à leur
+infrastructure** (Filesystem, SFTP, RabbitMQ...).
+
+--
+
+Parceque parfois, **PHP n'est pas la meilleure solution**.
+
+--
+
+## (booooh)
+
+???
+
+ESB est un investissement structurant et important, pas adapté à toutes les
+organisations
+
+---
+
+layout: false
+
+# Ce que l'ESB doit fournir
+
+--
+
+.fa.fa-square-o[] une très haute disponibilité
+
+???
+
+Dans un environnement clusterisé, de préférence
+
+--
+
+.fa.fa-square-o[] une garantie de *delivery* des messages
+
+???
+
+La promesse de 0 messages perdus
+
+--
+
+.fa.fa-square-o[] un *Message Oriented Middleware* (RabbitMQ, ZeroMQ, ...)
+
+--
+
+.fa.fa-square-o[] un support complet de REST et des codes d'erreurs
+
+???
+
+* `500` : réveiller l'astreinte
+* `404` : réessayer dans 5 minutes
+
+--
+
+.fa.fa-square-o[] un *Service Locator* pour ne pas paramétrer en dur les
+adresses physiques des applications
+
+--
+
+.fa.fa-square-o[] un *routing* avancé des messages
+
+???
+
+Commande devant être préparée par un entrepôt externe ?
+On envoi le message au bon fournisseur
+
+--
+
+.fa.fa-square-o[] le support des formats d'échanges des *tiers*
+
+???
+
+Tout ce qui ne peut pas recevoir un CDC
+
+On ne code plus de FTP, SFTP, etc... dans PHP
+
+Fin du crontab hell
+
+--
+
+### Chez Auchan : Talend ESB
+
+---
+
 class: todo
 
-# Exemple composer + routing
+# Sans l'ESB
+
+???
+
+Idéal pour le développement
+
+Docker links
 
 ---
 
-# Un process métier
+class: todo
 
-.center[
-.mermaid[graph LR
-        A((fa:fa-users))
-        B[Réf. Produit]
-        C[Transporteur]
-        D[Catalogues]
-        E[...]
-        A-->|modifie un produit|B
-        subgraph applications
-        B-->|Product|C
-        B-->|Product|D
-        B-->|Product|E
-        end
-]
-]
+# Avec l'ESB
 
 ---
 
-# l'API Rest rendue réutilisable
+class: todo
+
+# Bulle d'échanges
+
+---
+
+class: todo
+
+# Bilan
+
+.inner-table[
+| Bien | Pas bien |
+|------|----------|
+| a    | a        |
+]
+---
+
+class: todo
+
+# Reste à faire
 
 ---
 
@@ -751,6 +1105,12 @@ class: inverse, middle, center
       mermaid.initialize({
         // startOnLoad:true
       });
+      var tables = document.getElementsByClassName("inner-table");
+      for (var i = 0; i < tables.length; i++) {
+        tables[i].children[0].classList.add("table");
+        tables[i].children[0].classList.add("table-striped");
+        tables[i].children[0].classList.add("table-bordered");
+      }
     </script>
   </body>
 </html>
