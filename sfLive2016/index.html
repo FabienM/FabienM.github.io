@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SymfonyLive 2016 : Reactive Architecture et Microservices</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="icon" type="image/x-icon" href="http://symfony.com/favicon.ico" />
+    <style type="text/css">
+      @import url(css/style.css);
+      @import url(css/bootstrap.min.css);
+      @import url(css/mermaid.css);
+      @import url(css/font-awesome.min.css);
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle, inverse
+
+# Retour d'expérience
+## reactive architecture
+## micro-services
+## symfony
+
+???
+
+TODO : Brand the slide
+
+# Agenda
+
+1. Contexte
+1. Définitions
+ 1. SOA / Micro-services / Right-sized service ?
+ 1. Reactive Manifesto
+ 1. Architect cheat sheet
+
+## À trier
+
+* ESB
+* API Bundles
+* Nelmio
+* Bulle d'échanges
+* Migration continue
+
+---
+
+class: branded, inverse
+name: about-me
+
+# Fabien Meurillon
+.left-column[
+![avatar](http://www.gravatar.com/avatar/625ee5a055aa83bb0bc5bbab24ebae8e?s=128)
+[@FabienM](http://twitter.com/FabienM)
+
+
+![smile](images/smile-transparent.png)
+[@GroupeSmile](http://twitter.com/GroupeSmile)
+]
+
+.right-column[
+
+### Développeur polyglotte
+### Architecte
+### Évangéliste SOA
+### Smile Group
+
+]
+
+???
+
+Stand Smile sur le salon.
+
+---
+
+class: inverse, middle, center
+
+# Contexte
+
+---
+
+# Un peu de contexte
+
+![auchan](images/arf.png)
+
+Retour d'expérience issu de **Auchan Retail France**.
+
+Back-office e-commerce :
+Deux applications **monolithiques**, very legacy, framework MVC *custom*.
+
+**38 ans** de dette technique sensio insight
+
+???
+
+AECF : Auchan.fr, Auchan Traiteur, auchandirect, etc...
+
+--
+
+## Forum PHP 2015
+
+.left-column[
+![Alexandre Salomé au Forum PHP](https://img.youtube.com/vi/AMf96imU8w8/1.jpg)
+]
+.right-column[
+« *Retour d’expérience sur la migration du Back-Office* », Alexandre Salomé
+]
+
+???
+
+Proposer de visionner la conférence sur youtube
+
+Merci à Alexandre pour les slides de rappels
+
+---
+
+background-image: url(images/back-office-1.png)
+
+---
+
+background-image: url(images/back-office-2.png)
+
+???
+
+Découpage issu d'une réflexion / rationalisation des processus métiers.
+
+Migration probablement destinée à l'échec si ce n'est pas fait.
+
+---
+
+class: center, middle, inverse
+
+# On parle de quoi alors ?
+
+---
+
+name: definitions
+
+# Merci Wikipedia
+
+## SOA
+
+> An architectural pattern in computer software design in which application
+> components provide services to other components via a communications protocol,
+> typically over a network.
+> **These principles are independent of any vendor, product or technology.**
+
+???
+
+Alexandre Astier style :
+
+> Pardon, pardon mille fois de revenir sur des notions un petit peu
+> élémentaires, ça me semblait quand même intéressant de rappeler quelques
+> notions de base notamment pour la suite de l'exposé qui est —vous vous en
+> doutez— nettement plus complexe.
+
+--
+
+## Micro-Services
+
+> In computing, microservices is a software architecture style in which complex
+> applications are composed of **small, independent processes** communicating
+> with each other using **language-agnostic APIs**.
+
+???
+
+Une architecture micro-service **est** une SOA dont les composants applicatifs
+sont indépendants et **petits**.
+
+---
+
+# Ordre de grandeur
+
+## 1 micro-service =
+
+--
+
+* 1 composant applicatif (package composer)
+
+--
+
+* 1 domaine métier (*Domain Driven Design*)
+
+--
+
+* probablement moins de 5 aggrégats exposés sur l'API
+
+???
+
+On parle depuis quelques temps de *right-sized services*
+
+--
+
+.service[
+.blue[Commandes] .blue[Catalogue] .blue[...]
+.green[Fournisseurs] .green[Stock] .green[...]
+]
+
+--
+
+.service[
+.orange[Securité] .orange[Portail Web] .orange[...]
+]
+
+---
+
+name: reactive
+class: inverse, middle, center
+
+# Going reactive
+
+???
+
+TODO: Pourquoi ?
+
+Disclaimer: Buzzwords
+
+---
+
+# The reactive manifesto
+
+http://www.reactivemanifesto.org/
+
+???
+
+Version 2.0 datée de septembre 2014.
+
+Déclaration d'intentions uniquement, pas des guidelines d'implémentations.
+
+Peut être vu comme une *cheat sheet*.
+
+--
+
+## Responsive
+
+???
+
+The system responds in a timely manner if at all possible.
+
+--
+
+## Resilient
+
+???
+
+The system stays responsive in the face of failure.
+
+--
+
+## Elastic
+
+???
+
+The system stays responsive under varying workload.
+
+--
+
+## Message Driven
+
+???
+
+Reactive Systems rely on asynchronous message-passing to establish a boundary
+between components that ensures loose coupling
+
+---
+
+name: iteration1
+class: inverse, middle, center
+
+# On sait où on va...
+## Let's migrate!
+
+---
+
+# Par où commencer ?
+
+--
+
+## par les services métiers ?
+
+Oui, mais :
+
+* beaucoup d'enjeu
+* le legacy ne doit pas s'arrêter
+* besoin d'une forte implication du métier, beaucoup d'inertie
+
+--
+
+## par les briques techniques ?
+
+* on est autonomes
+* on peut avancer en parallèle du cadrage des applis métiers
+
+--
+
+.center[
+### OK, on y va !
+]
+
+---
+
+# Briques techniques
+
+## ExchangeBundle
+
+Bundle Symfony pour gérer les échanges entre micro-services.
+
+* chaque application intègre le bundle
+* permet d'envoyer et recevoir des messages sur filesystem, SGBD ou MOM
+  (RabbitMQ/ActiveMQ)
+* un *listener* planifié en cron sur chaque application se charge de consommer
+  les messages en attente
+
+???
+
+Codé en quelques jours.
+Uniquement pour POC.
+
+Super, on a refait RabbitMQ
+
+---
+
+class: todo, middle, center
+
+# Schéma ExchangeBundle
+
+---
+
+# Fail `:-/`
+
+--
+
+### .glyphicon.glyphicon-ok[] Message driven
+
+???
+
+### Orienté message
+
+* orienté message avec traitement asynchrone
+
+--
+
+### .glyphicon.glyphicon-remove[] Elastic
+
+???
+
+### Elastic
+
+* Multi-threading compliqué en PHP
+
+--
+
+### .glyphicon.glyphicon-remove[] Resilient
+
+???
+
+### Resilient
+
+* Statut du *listener* difficile à monitorer
+* Fortement couplé à l'infrastructure (adresse du MOM directement dans l'appli)
+
+--
+
+### .glyphicon.glyphicon-remove[] Responsive
+
+???
+
+### Responsive
+
+* le système ne "répond" jamais
+
+--
+
+### .glyphicon.glyphicon-remove[] Testable
+
+???
+
+### Testable
+
+* Injecter un message sur un environnement nécessite un accès à son infrastructure
+
+--
+
+### .glyphicon.glyphicon-remove[] Réutilisable
+
+???
+
+### Réutilisable
+
+* Impossible de réutiliser le composant pour les appels synchrones
+
+---
+
+class: middle, center, inverse
+
+# Quand on tient un marteau, tous les problèmes ressemblent à des clous
+
+--
+
+### Corollaire :
+
+--
+
+# Quand on est développeur Symfony, toutes les solutions ressemblent à des bundles
+
+---
+
+# Reposer le problème
+
+Nous avons un ensemble de petits composants applicatifs **indépendants**,
+communicants de manière synchrone et surtout **asynchrone** au travers du
+réseau. La plupart de ces composants seront des applications Symfony, mais
+**pas tous**.
+
+--
+
+## Les échanges ne sont pas de la responsabilité des applications
+
+Nul besoin de trouver une solution tout de suite, reportons le problème.
+
+???
+
+Intégrer un bundle dans une application étend ses responsabilités, même si le
+code est maintenu ailleurs.
+
+Reporter un problème dans l'informatique : appliquer des standards
+
+On cherche un protocole standard
+
+* parallélisable
+* stateless
+* supportant l'asynchrone
+* gérant les erreurs
+* bien supporté dans symfony
+
+---
+
+class: inverse, middle, center
+
+# HTTP
+
+---
+
+# Format d'échange
+
+### L'application propriétaire d'une donnée est responsable de son format d'échange
+
+Il s'agit du *modèle de données canonique* (CDC).
+
+--
+
+Le CDC est modélisé en PHP, puis mappé en JSON et/ou XML (*JMSSerializer*).
+
+.pull-left[
+```php
+namespace Auchan\RefProduit\AppBundle\Model;
+
+class Product {
+  private $id;
+  private $label;
+}
+```
+]
+  .pull-right[
+```json
+{
+  "id": "1",
+  "label": "An Awesome Product"
+}
+```
+]
+
+???
+
+Tout à fait possible avec Symfony Serializer
+
+---
+
+# HTTP, seul protocole d'échange
+
+Chaque application est responsable de ses données, celles-ci ne *devraient pas*
+être dupliquées d'une application à l'autre.
+
+.pull-left[
+### Application consommatrice
+
+.mermaid[sequenceDiagram
+        Stock->>Réf. Produit: GET /products/1
+]
+]
+
+.pull-right[
+### Client React
+.mermaid[sequenceDiagram
+App React->>Réf. Produit: POST /products
+Réf. Produit->>Stock: DELETE /products/1
+]
+]
+
+---
+
+# HTTP, seul protocole d'échange
+
+Il est possible qu'une application souhaite déclencher des actions lors d'un
+événement survenu dans un autre composant.
+
+.fa.fa-arrow-right[] Elle ne les recevra que sur sa propre API.
+
+.mermaid[sequenceDiagram
+Réf. Produit->>Stock: POST /products
+Réf. Produit->>Stock: DELETE /products/1
+]
+
+???
+
+Faire remarquer similitude
+
+---
+
+class: inverse, middle, center
+
+# Une observation
+
+Les routes et les messages qui permettent de *notifier* un autre microservice
+sont les mêmes que celles utilisées localement par une application pour son API.
+
+--
+
+# Factorisons !
+
+---
+
+# Here comes the *ApiBundle*
+
+.pull-left[
+## Première conception
+
+```bash
+src
+└── AppBundle
+    ├── Controller
+    │   └── Api
+    │       └── ProductController.php
+    ├── Model
+    │   └── Api
+    │       └── Product.php
+    └── Service
+        └── ProductService.php
+```
+]
+
+--
+
+.pull-right[
+## Avec l'ApiBundle
+```bash
+src
+├── AppBundle
+│   └── Service
+│       └── ProductService.php
+└── ApiBundle
+    ├── Controller
+    │   └── ProductController.php
+    ├── Model
+    │   └── Product.php
+    ├── Client
+    │   └── ProductService.php
+    └── composer.json
+```
+]
+
+---
+
+layout: true
+
+# L'*ApiBundle* est un ambassadeur
+
+Il contient :
+
+---
+
+.pull-left[
+```bash
+src
+├── AppBundle
+│   └── Service
+│       └── ProductService.php
+└── ApiBundle
+    ├── Controller
+    │   └── ProductController.php
+    ├── Client
+    │   └── ProductService.php
+    ├── Model
+    │   └── Product.php
+    └── composer.json
+```
+]
+
+---
+
+.pull-left[
+```bash
+src
+├── AppBundle
+│   └── Service
+│       └── ProductService.php
+└── ApiBundle
+    ├── Controller
+    │   └── ProductController.php
+*   ├── Client
+*   │   └── ProductService.php
+    ├── Model
+    │   └── Product.php
+    └── composer.json
+```
+]
+
+.pull-right[
+Le client (Guzzle) permettant d'appeler son application maître de manière
+synchrone
+]
+
+---
+
+.pull-left[
+```bash
+src
+├── AppBundle
+│   └── Service
+│       └── ProductService.php
+└── ApiBundle
+*   ├── Controller
+*   │   └── ProductController.php
+    ├── Client
+    │   └── ProductService.php
+    ├── Model
+    │   └── Product.php
+    └── composer.json
+```
+]
+
+.pull-right[
+Les routes et contrôleurs qui permettent à l'application maître de pousser les
+modifications.
+
+.todo[exemple routing]
+]
+---
+
+.pull-left[
+```bash
+src
+├── AppBundle
+│   └── Service
+│       └── ProductService.php
+└── ApiBundle
+    ├── Controller
+    │   └── ProductController.php
+    ├── Client
+    │   └── ProductService.php
+*   ├── Model
+*   │   └── Product.php
+    └── composer.json
+```
+]
+
+.pull-right[
+Les *modèles de données canoniques*.
+]
+
+---
+
+.pull-left[
+```bash
+src
+├── AppBundle
+│   └── Service
+│       └── ProductService.php
+└── ApiBundle
+    ├── Controller
+    │   └── ProductController.php
+    ├── Client
+    │   └── ProductService.php
+    ├── Model
+    │   └── Product.php
+*   └── composer.json
+```
+]
+
+--
+
+.pull-right[
+.img-100[![fabpot](images/fabpot.png)]
+
+Un `composer.json`, permettant son utilisation par les autres applications.
+
+L'API Bundle profite directement du *semver* de son application parente.
+]
+
+---
+
+layout: false
+class: todo
+
+# Exemple composer + routing
+
+---
+
+# Un process métier
+
+.center[
+.mermaid[graph LR
+        A((fa:fa-users))
+        B[Réf. Produit]
+        C[Transporteur]
+        D[Catalogues]
+        E[...]
+        A-->|modifie un produit|B
+        subgraph applications
+        B-->|Product|C
+        B-->|Product|D
+        B-->|Product|E
+        end
+]
+]
+
+---
+
+# l'API Rest rendue réutilisable
+
+---
+
+class: inverse, middle, center
+
+# Merci !
+
+---
+
+class: inverse, middle, center
+
+# Questions ?
+
+    </textarea>
+    <script src="js/remark-latest.min.js" type="text/javascript"></script>
+    <script src="js/mermaid.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      var slideshow = remark.create({
+        // ratio: '16:9',
+        ratio: '4:3',
+        countIncrementalSlides: false,
+        highlightLines: true,
+        highlightStyle: "dark"
+      });
+      mermaid.initialize({
+        // startOnLoad:true
+      });
+    </script>
+  </body>
+</html>

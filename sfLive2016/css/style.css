@@ -1,0 +1,222 @@
+@import url(Yanone-Kaffeesatz.css);
+@import url(Droid-Serif.css);
+@import url(Ubuntu-Mono.css);
+
+body {
+  font-family: 'Droid Serif';
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: 'Yanone Kaffeesatz';
+  font-weight: normal;
+}
+
+.remark-code,
+.remark-inline-code {
+  font-family: 'Ubuntu Mono';
+}
+
+.remark-slide-content {
+  background-image: radial-gradient(#fff, #ccc);
+}
+
+.remark-slide-content h1 {
+  font-size: 3em;
+}
+
+.remark-slide-content h2 {
+  font-size: 2em;
+}
+
+.remark-slide-content h3 {
+  font-size: 1.6em;
+}
+
+.footnote {
+  position: absolute;
+  bottom: 3em;
+}
+
+li p {
+  line-height: 1.25em;
+}
+
+.red {
+  color: #fa0000;
+}
+
+.large {
+  font-size: 2em;
+}
+
+a,
+a > code {
+  color: rgb(249, 38, 114);
+  text-decoration: none;
+}
+
+code {
+  background: #e7e8e2;
+  border-radius: 5px;
+}
+
+.remark-code-line-highlighted {
+  /*background-color: #373832;*/
+  background-color: #2C768E;
+}
+
+.pull-left {
+  float: left;
+  width: 47%;
+}
+
+.pull-right {
+  float: right;
+  width: 47%;
+}
+
+.pull-right ~ p {
+  clear: both;
+}
+
+#slideshow .slide .content code {
+  font-size: 0.8em;
+}
+
+#slideshow .slide .content pre code {
+  font-size: 0.9em;
+  padding: 15px;
+}
+
+.todo {
+  background: red;
+  color: #f3f3f3;
+  text-shadow: 0 0 20px #333;
+}
+
+.inverse {
+  background-image: radial-gradient(#499CB1, #2C768E);
+  color: #f3f3f3;
+  text-shadow: 0 0 20px #333;
+}
+
+.inverse a {
+  font-family: 'Yanone Kaffeesatz';
+  color: #f3f3f3;
+}
+
+.inverse h1,
+.inverse h2,
+.todo h1,
+.todo h2 {
+  color: #f3f3f3;
+  line-height: 0.8em;
+}
+
+.branded {
+  background: url(../images/penguins.png) right bottom no-repeat, radial-gradient(#499CB1, #2C768E) !important;
+}
+
+/* Two-column layout */
+.left-column {
+  color: #777;
+  width: 20%;
+  height: 92%;
+  float: left;
+}
+
+.left-column h2:last-of-type,
+.left-column h3:last-child {
+  color: #000;
+}
+
+.right-column {
+  width: 75%;
+  float: right;
+  padding-top: 1em;
+}
+
+/*table {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #d7d7d7;
+  border-bottom: 2px solid #c6d5e3;
+}
+
+thead {
+  border-bottom: 2px solid #c6d5e3;
+  color: #7196b9;
+  background: #f7fafc;
+}
+
+tr:not(:last-of-type) {
+  border-bottom: 1px solid #eaeaea;
+}
+
+td {
+  padding: 16px 12px 14px;
+}
+
+thead td {
+  padding: 10px 12px 8px;
+}
+
+td:not(:last-of-type) {
+  border-right: 1px solid #eaeaea;
+}
+
+thead td {
+  font-weight: 700;
+}*/
+
+blockquote {
+  background: #eee;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+}
+
+blockquote:before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+
+blockquote p {
+  display: inline;
+}
+
+.service span {
+  color: white;
+  font-weight: bold;
+  width: 25%;
+  padding: 10px;
+  margin: 10px;
+  display: block;
+  float: left;
+  text-align: center;
+  border-radius: 4px;
+}
+
+.service .blue {
+  background-color: blue;
+}
+
+.service .green {
+  background-color: LimeGreen;
+}
+
+.service .orange {
+  background-color: orange;
+}
+
+.img-100 img {
+  width: 100%;
+}
