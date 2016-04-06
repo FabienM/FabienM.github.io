@@ -69,12 +69,6 @@ Stand Smile sur le salon.
 
 ---
 
-class: inverse, middle, center
-
-# Contexte
-
----
-
 # Un peu de contexte
 
 ![auchan](images/arf.png)
@@ -89,6 +83,8 @@ Deux applications **monolithiques**, very legacy, framework MVC *custom*.
 ???
 
 AECF : Auchan.fr, Auchan Traiteur, auchandirect, etc...
+
+En gros, équipe de 30 à 50 personnes
 
 --
 
@@ -162,11 +158,11 @@ Alexandre Astier style :
 Une architecture micro-service **est** une SOA dont les composants applicatifs
 sont indépendants et **petits**.
 
+Indépendant aussi bien en code applicatif qu'en **données**.
+
 ---
 
 # Ordre de grandeur
-
-.todo[sous-systeme indépendant (applis, données)]
 
 ## 1 micro-service =
 
@@ -320,12 +316,6 @@ Codé en quelques jours.
 Uniquement pour POC.
 
 Super, on a refait RabbitMQ
-
----
-
-class: todo, middle, center
-
-# Schéma ExchangeBundle
 
 ---
 
@@ -651,7 +641,7 @@ src
 
 .pull-right[
 Le client (Guzzle) permettant d'appeler son application maître de manière
-synchrone
+synchrone.
 ]
 
 ---
@@ -1040,44 +1030,181 @@ Fin du crontab hell
 
 ---
 
-class: todo
-
 # Sans l'ESB
+
+.pull-left.img-100[
+![api1](images/API1.png)
+]
+
+--
+
+.pull-right[
+* Idéal pour le développement
+* Synchrone
+* Couplage fort, uniquement un pour un
+* Pas orienté message
+]
 
 ???
 
-Idéal pour le développement
-
-Docker links
+Bien adapté aux docker links
 
 ---
-
-class: todo
 
 # Avec l'ESB
 
+.img-100[
+![api2](images/API2.png)
+]
+
 ---
 
-class: todo
+# Finally
+
+--
+
+.center.middle[
+## .fa.fa-check-square-o[] Message driven
+]
+
+---
+
+class: inverse, middle, center
+
+# ESB ≠ Magie
+
+???
+
+Problème :
+
+Développer les intégrations dans un ESB pas trivial.
+Besoin pour les équipes back-office d'être autonome sur les échanges.
+
+Pour communiquer avec l'extérieur, pas de solution, il faut
+mapper les CDC
+Au sein du SI, les ApiBundle et les CDC permettent uniformité.
+
+Uniformité = Automatisation possible
+
+---
+
+layout:true
 
 # Bulle d'échanges
 
 ---
 
-class: todo
+### Déclaration des applications à l'ESB
+
+```json
+[
+    {
+        "id" : "appli1",
+        "url": "http://appli1.auchan.net/api/exchanges"
+    },
+    {
+        "id" : "appli2",
+        "url": "http://appli2.auchan.net/api/exchanges"
+    },
+    ...
+]
+```
+
+---
+
+### *Manifest* des objets produits et consommés
+
+`GET http://appli1.auchan.net/api/exchanges`
+```json
+{
+    "consume": {
+        "product": "http://appli1.auchan.net/api/exchanges/product",
+    },
+    "produce": {
+        "stock": "http://appli1.auchan.net/api/exchanges/stock",
+    }
+}
+```
+
+???
+
+Automatisation des routes dans Talend
+
+---
+
+layout:false
 
 # Bilan
 
-.inner-table[
-| Bien | Pas bien |
-|------|----------|
-| a    | a        |
+--
+
+.pull-left[
+## The Good
+* urbanisation respectée
+* découplage réussi
+* domaine métier mieux maîtrisé
+* test des API automatisables
 ]
+
+???
+
+### Découplage réussi
+
+* n'importe quel composant peut être remplacé par une solution externe
+* l'ESB se charge de faire la médiation
+
+### domaine métier mieux maîtrisé
+
+* Permet la spécialisation des équipes
+
+--
+
+.pull-right[
+## The Ugly
+* complexité de l'architecture
+* beaucoup de packages dans Sylius
+]
+
 ---
 
-class: todo
-
 # Reste à faire
+
+--
+
+### Monorepos
+
+--
+
+### Exploiter la bulle d'échange
+
+--
+
+### Propagation de l'authentification
+
+???
+
+Mais ça a avancé
+
+--
+
+### Automatiser les déploiements
+
+--
+
+### Évangéliser
+
+???
+
+Les développeurs +
+Les exploitants
+
+--
+
+### Vraiment évangéliser
+
+???
+
+Beaucoup de choses cool
 
 ---
 
