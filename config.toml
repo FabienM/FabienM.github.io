@@ -32,6 +32,11 @@ theme = "aerial"
   link = "https://github.com/FabienM"
 
 [[params.social]]
+  medium = "Bookmarks"
+  icon = "bookmark"
+  link = "https://www.diigo.com/profile/fabienm"
+
+[[params.social]]
   medium = "Email"
   icon = "envelope-o"
   link = "mailto:fabien@meurillon.org"
