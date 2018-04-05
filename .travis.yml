@@ -1,0 +1,26 @@
+sudo: required
+python:
+  - "2.7"
+
+# Clean and don't fail
+install:
+  - sudo pip install pygments
+  - wget -O /tmp/hugo.deb https://github.com/gohugoio/hugo/releases/download/v0.38/hugo_0.38_Linux-64bit.deb
+  - sudo dpkg -i /tmp/hugo.deb
+  - rm -rf public || exit 0
+
+# Build the website
+script:
+  - pygmentize -V
+  - git submodule update --init --recursive
+  - hugo -v
+
+deploy:
+  provider: pages
+  local-dir: public
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  keep-history: true
+  target-branch: master
+  on:
+    branch: source-master
